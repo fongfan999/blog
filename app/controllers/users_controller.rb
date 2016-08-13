@@ -1,7 +1,12 @@
 class UsersController < ApplicationController
+  before_action :authenticate_user!, only: [:edit, :update]
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def new
+    if current_user
+      redirect_to root_path, notice: "You already logged in."
+      return
+    end
     @user = User.new
   end
 

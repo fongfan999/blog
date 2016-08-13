@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_action :set_article
+  before_action :set_article, except: [:destroy]
 
   def create
     @comment = @article.comments.build(comment_params)
@@ -11,6 +11,7 @@ class CommentsController < ApplicationController
   end
   
   def destroy
+    @article = current_user.articles.find(params[:article_id])
     @comment = @article.comments.find(params[:id])
     @comment.destroy
     redirect_to @article, :notice => 'Comment deleted'

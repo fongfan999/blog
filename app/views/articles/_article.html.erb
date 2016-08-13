@@ -3,9 +3,13 @@
     <h1><%= link_to article.title, article %></h1>
     <p><%= article.body %></p>
   </h3>
-  <span class='actions'>
-    <%= link_to "Edit", edit_article_path(article) %>
-    <%= link_to "Delete", article, :confirm => "Are you sure?", :method => :delete %>
-  </span>
+  <% if article.owned_by?(current_user) %>
+    <span class='actions'>
+      <%= link_to "Edit", edit_article_path(article) %>
+      <%= link_to "Delete", article, :confirm => "Are you sure?", :method => :delete %>
+    </span>
+  <% end %>
   
 <% end %>
+
+<hr>
