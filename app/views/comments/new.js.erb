@@ -1,0 +1,4 @@
+$("<%= escape_javascript render(file: 'comments/new.html.erb') %>").
+  insertAfter("#comments");
+$("#new_comment").hide().slideDown();
+$("#new_comment_link").hide();
