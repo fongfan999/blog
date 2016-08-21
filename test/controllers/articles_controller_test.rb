@@ -2,48 +2,66 @@ require 'test_helper'
 
 class ArticlesControllerTest < ActionController::TestCase
   setup do
-    @article = articles(:one)
+    @article = articles(:welcome_to_rails)
   end
 
   test "should get index" do
     get :index
+
     assert_response :success
+    assert_template :index
     assert_not_nil assigns(:articles)
   end
 
   test "should get new" do
+    login_as(:eugene)
     get :new
+
     assert_response :success
   end
 
   test "should create article" do
-    assert_difference('Article.count') do
-      post :create, article: { body: @article.body, excerpt: @article.excerpt, location: @article.location, published_at: @article.published_at, title: @article.title }
-    end
+    login_as(:eugene)
 
+    assert_difference('Article.count') do
+      post :create, article: { title: "Post title", body: "Lorem ispum.." }
+    end
+    assert_response :redirect
     assert_redirected_to article_path(assigns(:article))
   end
 
   test "should show article" do
-    get :show, id: @article
+    get :show, id: @article.to_param
+
     assert_response :success
+    assert_template :show
+    assert_not_nil assigns(:article)
+    assert assigns(:article).valid?
   end
 
   test "should get edit" do
-    get :edit, id: @article
+    login_as(:eugene)
+    get :edit, id: @article.to_param
+
     assert_response :success
   end
 
   test "should update article" do
-    patch :update, id: @article, article: { body: @article.body, excerpt: @article.excerpt, location: @article.location, published_at: @article.published_at, title: @article.title }
+    login_as(:eugene)
+
+    patch :update, id: @article.to_param, article: { title: "New Title" }
     assert_redirected_to article_path(assigns(:article))
   end
 
   test "should destroy article" do
-    assert_difference('Article.count', -1) do
-      delete :destroy, id: @article
-    end
+    login_as(:eugene)
 
+    assert_nothing_raised { Article.find(@article.to_param) }
+    assert_difference('Article.count', -1) do
+      delete :destroy, id: @article.to_param
+    end
+    assert_response :redirect
     assert_redirected_to articles_path
+    assert_raise(ActiveRecord::RecordNotFound) { Article.find(@article.to_param) }
   end
 end
