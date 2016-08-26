@@ -62,6 +62,8 @@ class ArticlesControllerTest < ActionController::TestCase
     end
     assert_response :redirect
     assert_redirected_to articles_path
-    assert_raise(ActiveRecord::RecordNotFound) { Article.find(@article.to_param) }
+    assert_raise(ActiveRecord::RecordNotFound) do
+      Article.find(@article.to_param)
+    end
   end
 end
