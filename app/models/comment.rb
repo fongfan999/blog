@@ -6,14 +6,14 @@ class Comment < ActiveRecord::Base
 
   after_create :send_comment_email
 
+  private
+
   def article_should_be_published
     if article && !article.published?
       errors.add(:article_id, "is not published yet")
     end
   end
-
-  private
-
+  
   def send_comment_email
     Notifier.comment_added(self).deliver_now
   end
